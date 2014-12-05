@@ -16,8 +16,8 @@
     "require": {
         "php": ">=5.3.0",
         "xamin/handlebars.php"      : "dev-master",
-        "calderawp/admin-templates" : "dev-master",
-        "calderawp/admin-assets"    : "dev-master"
+        "calderawp/metaplate-admin-templates" : "dev-master",
+        "calderawp/metaplate-admin-assets"    : "dev-master"
     },
     "autoload": {
         "psr-4": {
