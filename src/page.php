@@ -1,12 +1,12 @@
 <?php
 /**
- * @TODO What this does.
+ * Adds and sets up admin page
  *
- * @package   @TODO
- * @author    Josh Pollock <Josh@JoshPress.net>
+ * @package calderawp\helpers
+ * @author    David Cramer <david@digilab.co.za>
  * @license   GPL-2.0+
- * @link      
- * @copyright 2014 Josh Pollock
+ * @link
+ * @copyright 2014 David Cramer
  */
 
 namespace calderawp\metaplate\admin;
@@ -14,6 +14,11 @@ namespace calderawp\metaplate\admin;
 
 use calderawp\metaplate\core\init;
 
+/**
+ * Class page
+ *
+ * @package calderawp\metaplate\admin
+ */
 class page extends init {
 
 	/**
@@ -79,23 +84,23 @@ class page extends init {
 	public function enqueue_admin_stylescripts() {
 
 		$screen = get_current_screen();
-
+		$path = MTPT_URL . '/vendor/calderawp/metaplate-admin-assets/src/assets/';
 
 		if( false !== strpos( $screen->base, 'metaplate' ) ){
 
-			wp_enqueue_style( 'metaplate-core-style', MTPT_URL . '/assets/css/styles.css' );
-			wp_enqueue_style( 'metaplate-baldrick-modals', MTPT_URL . '/assets/css/modals.css' );
-			wp_enqueue_script( 'metaplate-wp-baldrick', MTPT_URL . '/assets/js/wp-baldrick-full.min.js', array( 'jquery' ) , false, true );
+			wp_enqueue_style( 'metaplate-core-style', $path . 'css/styles.css' );
+			wp_enqueue_style( 'metaplate-baldrick-modals', $path . 'css/modals.css' );
+			wp_enqueue_script( 'metaplate-wp-baldrick', $path . 'js/wp-baldrick-full.min.js', array( 'jquery' ) , false, true );
 			wp_enqueue_script( 'jquery-ui-autocomplete' );
 			wp_enqueue_style( 'wp-color-picker' );
 			wp_enqueue_script( 'wp-color-picker' );
 
 			if( !empty( $_GET['edit'] ) ){
-				wp_enqueue_style( 'metaplate-codemirror-style', MTPT_URL . '/assets/css/codemirror.css' );
-				wp_enqueue_script( 'metaplate-codemirror-script', MTPT_URL . '/assets/js/codemirror.js', array( 'jquery' ) , false );
+				wp_enqueue_style( 'metaplate-codemirror-style', $path . 'css/codemirror.css' );
+				wp_enqueue_script( 'metaplate-codemirror-script', $path . 'js/codemirror.js', array( 'jquery' ) , false );
 			}
 
-			wp_enqueue_script( 'metaplate-core-script', MTPT_URL . '/assets/js/scripts.min.js', array( 'metaplate-wp-baldrick' ) , false );
+			wp_enqueue_script( 'metaplate-core-script', $path . 'js/scripts.min.js', array( 'metaplate-wp-baldrick' ) , false );
 
 
 		}
