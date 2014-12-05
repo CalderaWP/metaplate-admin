@@ -21,7 +21,7 @@
     },
     "autoload": {
         "psr-4": {
-            "calderawp\\metaplate\\core\\": "src"
+            "calderawp\\metaplate\\admin\\": "src"
         }
     }
 }
