@@ -1,0 +1,27 @@
+{
+    "name": "calderawp/metaplate-admin",
+    "description": "Admin for Caldera Metaplate.",
+    "type": "wordpress-plugin",
+    "keywords": [
+        "wordpress"
+    ],
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "David Cramer",
+            "homepage": "http://cramer.co.za",
+            "role": "Lead Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "xamin/handlebars.php"      : "dev-master",
+        "calderawp/admin-templates" : "dev-master",
+        "calderawp/admin-assets"    : "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "calderawp\\metaplate\\core\\": "src"
+        }
+    }
+}
