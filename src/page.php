@@ -32,6 +32,8 @@ class page extends init {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_stylescripts' )
 		);
 
+		add_action( 'admin_init', array( $this, 'define_admin_template_path' ) );
+
 	}
 
 
@@ -107,6 +109,26 @@ class page extends init {
 
 
 	}
+
+	public function define_admin_template_path() {
+		if ( ! defined( 'MTPT_ADMIN_TEMPLATE_PATH' ) ) {
+			$path = $this->template_package_path();
+			$path = $path . 'templates/';
+
+			define( 'MTPT_ADMIN_TEMPLATE_PATH', $path );
+		}
+
+	}
+
+	public function template_package_path() {
+		return MTPT_CALDERAWP_PATH . 'metaplate-admin-templates/src/';
+	}
+
+
+
+
+
+
 
 
 } 
