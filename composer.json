@@ -1,7 +1,7 @@
 {
     "name": "calderawp/metaplate-admin",
     "description": "Admin for Caldera Metaplate.",
-    "type": "wordpress-plugin",
+    "type": "library",
     "keywords": [
         "wordpress"
     ],
