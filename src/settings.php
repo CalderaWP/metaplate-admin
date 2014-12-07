@@ -33,6 +33,10 @@ class settings extends init {
 		// delete
 		add_action( 'wp_ajax_mtpt_delete_metaplate', array( $this, 'delete_metaplate') );
 
+		//add post types
+		$post_types = new post_types();
+		add_filter( 'caldera_metaplate_post_types', array( $post_types, 'get_post_types' ) );
+
 	}
 
 
