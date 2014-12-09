@@ -7,16 +7,21 @@
 	</div>
 
 <?php
-
-	$metaplates = get_option('_metaplates_registry');
+	$admin_settings_class = new calderawp\metaplate\admin\settings();
+	$metaplates = get_option( $admin_settings_class->registry_option_name );
 	if( empty( $metaplates ) ){
 		$metaplates = array();
 	}
 	global $wpdb;
 	
 	foreach( $metaplates as $metaplate_id => $metaplate ){
+
+
 		$metaplate = get_option( $metaplate['id'] );
-		if( !empty( $metaplate['post_type'] ) ){
+		if ( isset( $metaplate[ 'content_type_specific'] ) && false == $metaplate[ 'content_type_specific'] )  {
+			$post_types = __( 'Non content type specific.', 'metaplate' );
+		}
+		elseif( !empty( $metaplate['post_type'] ) ){
 			$post_types = implode(', ', array_keys( $metaplate['post_type'] ) );
 		}else{
 			$post_types = __( 'Disabled. (Not setup for any post types)', 'metaplate' );
@@ -51,7 +56,8 @@
 	function mtpt_create_new_metaplate(el){
 		var metaplate 	= jQuery(el),
 			name 	= jQuery("#new-metaplate-name"),
-			slug 	= jQuery('#new-metaplate-slug');
+			slug 	= jQuery('#new-metaplate-slug' ),
+			content_type_specific = jQuery('#content_type_specific' );
 
 		if( slug.val().length === 0 ){
 			name.focus();
@@ -62,7 +68,7 @@
 			return false;
 		}
 
-		metaplate.data('name', name.val() ).data('slug', slug.val() ); 
+		metaplate.data('name', name.val() ).data('slug', slug.val() ).data( 'content_type_specific', jQuery('input#content_type_specific').is(':checked') );
 
 	}
 
@@ -100,6 +106,11 @@
 	<div class="metaplate-config-group">
 		<label style="width: 90px;"><?php _e('Slug', 'metaplate'); ?></label>
 		<input type="text" name="slug" id="new-metaplate-slug" data-format="slug" autocomplete="off" style="width: 280px;">
+	</div>
+	<div class="metaplate-config-group">
+		<label style="width: 90px;"><?php _e('Content Type Specific', 'metaplate'); ?></label>
+		<input type="checkbox" name="content_type_specific" id="content_type_specific"  autocomplete="off" checked="true">
+		<p><?php _e( 'If the content type specific option is checked, this Metaplate will be automatically for that content type. If not, it will only be able to be outputted using a PHP function or shortcode.', 'metaplate' ); ?></p>
 	</div>
 
 </script>

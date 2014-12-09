@@ -20,6 +20,10 @@ use calderawp\metaplate\core\init;
  */
 class settings extends init {
 
+	/**
+	 * @var string The key for the metaplate registry
+	 */
+	public $registry_option_name = '_metaplates_registry';
 
 	/**
 	 * Start up
@@ -45,21 +49,34 @@ class settings extends init {
 			wp_send_json_error( $config );
 		}
 
-		$metaplates = get_option( '_metaplates_registry' );
+		$metaplates = $this->get_registry();
 		if( isset( $config['id'] ) && !empty( $metaplates[ $config['id'] ] ) ){
-			$updated_registery = array(
-				'id'	=>	$config['id'],
-				'name'	=>	$config['name'],
-				'slug'	=>	$config['slug']
-			);
-			// add search form to registery
-			if( !empty( $config['search_form'] ) ){
-				$updated_registery['search_form'] = $config['search_form'];
+			$new_value = array();
+			$old_value = get_option( $config['id'] );
+			$fields = array( 'id', 'name', 'slug', 'content_type_specific' );
+			foreach( $fields as $field ) {
+				if ( isset( $config[ $field ] ) ) {
+					if ( 'content_type_specific' !== $field ) {
+						$new_value[ $field ] = strip_tags( $config[ $field ] );
+					} else {
+						$new_value[ $field ] = (bool) $config[ $field ];
+					}
+
+				}
+				else {
+					$new_value[ $field ] = $old_value[ $field ];
+				}
+
 			}
 
-			$metaplates[$config['id']] = $updated_registery;
-			update_option( '_metaplates_registry', $metaplates );
+			// add search form to registery
+			if( !empty( $config['search_form'] ) ){
+				$new_value['search_form'] = $config['search_form'];
+			}
+
+			$this->update_registry( $new_value, $metaplates[$config['id']] );
 		}
+
 		update_option( $config['id'], $config );
 
 	}
@@ -102,7 +119,7 @@ class settings extends init {
 	 */
 	public function delete_metaplate(){
 
-		$search_blocks = get_option( '_metaplates_registry' );
+		$search_blocks = $this->get_registry();
 		if( isset( $search_blocks[ $_POST['block'] ] ) ){
 			delete_option( $search_blocks[$_POST['block']]['id'] );
 
@@ -120,26 +137,97 @@ class settings extends init {
 	 */
 	public function create_new_metaplate(){
 
-		$metaplates = get_option('_metaplates_registry');
+		$metaplates = $this->get_registry();
 		if( empty( $metaplates ) ){
 			$metaplates = array();
 		}
 
 		$metaplate_id = uniqid('MTPT').rand(100,999);
 		if( !isset( $metaplates[ $metaplate_id ] ) ){
-			$new_metaplate = array(
-				'id'		=>	$metaplate_id,
-				'name'		=>	$_POST['name'],
-				'slug'		=>	$_POST['slug'],
-				'_current_tab' => '#metaplate-panel-general'
-			);
-			update_option( $metaplate_id, $new_metaplate );
-			$metaplates[ $metaplate_id ] = $new_metaplate;
-			update_option( '_metaplates_registry', $metaplates );
+			$data = $this->validate_sanitize_new();
+			if ( is_array( $data ) ) {
+				$new_metaplate = array(
+					'id'           => $metaplate_id,
+					'_current_tab' => '#metaplate-panel-general'
+				);
+				$new_metaplate = array_merge( $new_metaplate, $data );
 
-			// end
-			wp_send_json_success( $new_metaplate );
+				update_option( $metaplate_id, $new_metaplate );
+				$this->update_registry( $new_metaplate, $metaplate_id );
+
+				// end
+				wp_send_json_success( $new_metaplate );
+				die();
+			}
+
 		}
+
+		wp_send_json_error();
+
+	}
+
+	/**
+	 * Validate and sanitize metaplate options coming from POST data.
+	 *
+	 * @return array|bool
+	 */
+	private function validate_sanitize_new() {
+		$fields = array( 'name', 'slug', 'content_type_specific' );
+		foreach( $fields as $field ) {
+			if ( ! isset( $_POST[ $field ] ) ) {
+				return false;
+
+			}
+
+			if ( 'content_type_specific' !== $field ) {
+				$save[ $field ] = strip_tags( $_POST[ $field ] );
+			}
+
+
+		}
+
+		$content_type_specific = $_POST[ 'content_type_specific'];
+		if ( ! in_array( $content_type_specific, array( 'true', 'false' ) ) ) {
+			return false;
+		}
+
+		if ( 'false' === $_POST[ 'content_type_specific']  ) {
+			$save[ 'content_type_specific' ] = false;
+		} else {
+			$save[ 'content_type_specific' ] = true;
+		}
+
+		return $save;
+
+
+	}
+
+	/**
+	 * Get current metaplates
+	 *
+	 * @return array|bool
+	 */
+	private function get_registry() {
+		return get_option( $this->registry_option_name );
+
+	}
+
+	/**
+	 * Update registry of metaplates
+	 *
+	 * Note: Does not save the metaplate itself.
+	 *
+	 * @param array $new_value The new item to add.
+	 * @param string $id Id of new item to add.
+	 *
+	 * @return bool
+	 */
+	private function update_registry( $new_value, $id ) {
+		$registry = $this->get_registry();
+		$registry[ $id ] = $new_value;
+
+		return update_option( $this->registry_option_name, $registry );
+
 	}
 
 
