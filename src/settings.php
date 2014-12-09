@@ -78,9 +78,18 @@ class settings extends init {
 			}
 
 			$this->update_registry( $new_value, $metaplates[$config['id']] );
+
 		}
 
-		update_option( $config['id'], $config );
+		$update = update_option( $config['id'], json_encode( $config ) );
+		if ( $update ) {
+			wp_send_json_success( $config );
+			die();
+		}
+
+		wp_send_json_error( $config );
+		die();
+
 
 	}
 
