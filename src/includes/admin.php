@@ -7,8 +7,7 @@
 	</div>
 
 <?php
-	$admin_settings_class = new calderawp\metaplate\admin\settings();
-	$metaplates = get_option( $admin_settings_class->registry_option_name );
+	$metaplates = calderawp\metaplate\core\data::get_registry();
 	if( empty( $metaplates ) ){
 		$metaplates = array();
 	}
@@ -17,7 +16,7 @@
 	foreach( $metaplates as $metaplate_id => $metaplate ){
 
 
-		$metaplate = get_option( $metaplate['id'] );
+		$metaplate =calderawp\metaplate\core\data::get_metaplate( $metaplate[ 'id' ] );
 		if ( isset( $metaplate[ 'content_type_specific'] ) && false == $metaplate[ 'content_type_specific'] )  {
 			$post_types = __( 'Non content type specific.', 'metaplate' );
 		}

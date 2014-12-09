@@ -12,6 +12,7 @@
 namespace calderawp\metaplate\admin;
 
 
+use calderawp\metaplate\core\data;
 use calderawp\metaplate\core\init;
 
 /**
@@ -20,10 +21,6 @@ use calderawp\metaplate\core\init;
  */
 class settings extends init {
 
-	/**
-	 * @var string The key for the metaplate registry
-	 */
-	public $registry_option_name = '_metaplates_registry';
 
 	/**
 	 * Start up
@@ -52,8 +49,8 @@ class settings extends init {
 		$metaplates = $this->get_registry();
 		if( isset( $config['id'] ) && !empty( $metaplates[ $config['id'] ] ) ){
 			$new_value = array();
-			$old_value = get_option( $config['id'] );
-			$fields = array( 'id', 'name', 'slug', 'content_type_specific' );
+			$old_value = data::get_metaplate( $config[ 'id' ] );
+			$fields = array( 'id', 'name', 'slug', 'content_type_specific', '_current_tab' );
 			foreach( $fields as $field ) {
 				if ( isset( $config[ $field ] ) ) {
 					if ( 'content_type_specific' !== $field ) {
@@ -64,7 +61,13 @@ class settings extends init {
 
 				}
 				else {
-					$new_value[ $field ] = $old_value[ $field ];
+					if ( isset( $old_value[ $field ] ) ) {
+						$new_value[ $field ] = $old_value[ $field ];
+					}
+					else {
+						wp_send_json_error( $config );
+						die();
+					}
 				}
 
 			}
@@ -96,7 +99,7 @@ class settings extends init {
 		if( !empty( $_POST['metaplate-setup'] ) && empty( $_POST['config'] ) ){
 			$config = stripslashes_deep( $_POST );
 
-			self::update_settings( $config );
+			$this->update_settings( $config );
 
 			wp_redirect( '?page=metaplate&updated=true' );
 			exit;
@@ -104,7 +107,7 @@ class settings extends init {
 
 		if( !empty( $_POST['config'] ) ){
 			$config = json_decode( stripslashes_deep( $_POST['config'] ), true );
-			self::update_settings( $config );
+			$this->update_settings( $config );
 			wp_send_json_success( $config );
 
 		}
@@ -208,7 +211,7 @@ class settings extends init {
 	 * @return array|bool
 	 */
 	private function get_registry() {
-		return get_option( $this->registry_option_name );
+		return data::get_registry();
 
 	}
 
@@ -223,10 +226,7 @@ class settings extends init {
 	 * @return bool
 	 */
 	private function update_registry( $new_value, $id ) {
-		$registry = $this->get_registry();
-		$registry[ $id ] = $new_value;
-
-		return update_option( $this->registry_option_name, $registry );
+		return data::update_registry( $new_value, $id );
 
 	}
 
