@@ -50,11 +50,21 @@ class settings extends init {
 		if( isset( $config['id'] ) && !empty( $metaplates[ $config['id'] ] ) ){
 			$new_value = array();
 			$old_value = data::get_metaplate( $config[ 'id' ] );
+			if ( is_string( $old_value ) ) {
+				$old_value = (array) json_decode( $old_value );
+			}
 			$fields = array( 'id', 'name', 'slug', 'content_type_specific', '_current_tab' );
 			foreach( $fields as $field ) {
 				if ( isset( $config[ $field ] ) ) {
 					if ( 'content_type_specific' !== $field ) {
 						$new_value[ $field ] = strip_tags( $config[ $field ] );
+						if ( isset( $old_value[ $field ] ) ) {
+							$new_value[ $field ] = $old_value[ $field ];
+						}
+						else {
+							wp_send_json_error( $config );
+							die();
+						}
 					} else {
 						$new_value[ $field ] = (bool) $config[ $field ];
 					}
@@ -64,10 +74,7 @@ class settings extends init {
 					if ( isset( $old_value[ $field ] ) ) {
 						$new_value[ $field ] = $old_value[ $field ];
 					}
-					else {
-						wp_send_json_error( $config );
-						die();
-					}
+
 				}
 
 			}
