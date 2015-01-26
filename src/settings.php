@@ -88,6 +88,10 @@ class settings extends init {
 
 		}
 
+		if ( ! $config[ 'id'] && isset( $config[ 'slug'] ) ) {
+			$config[ 'id' ] = data::get_metaplate_id_by_slug( $config[ 'slug' ] );
+		}
+
 		$update = update_option( $config['id'], json_encode( $config ) );
 		if ( $update ) {
 			wp_send_json_success( $config );

@@ -17,12 +17,13 @@
 
 
 		$metaplate = calderawp\metaplate\core\data::get_metaplate( $metaplate[ 'id' ] );
+		$metaplate = \calderawp\metaplate\core\data::validate_metaplate( $metaplate );
 
 		if ( isset( $metaplate[ 'content_type_specific'] ) && false == $metaplate[ 'content_type_specific'] )  {
 			$post_types = __( 'Non content type specific.', 'metaplate' );
 		}
 		elseif( !empty( $metaplate['post_type'] ) ){
-			$post_types = implode(', ', array_keys( $metaplate['post_type'] ) );
+			$post_types = implode(', ', array_keys( (array) $metaplate['post_type'] ) );
 		}else{
 			$post_types = __( 'Disabled. (Not setup for any post types)', 'metaplate' );
 		}
