@@ -17,7 +17,6 @@
 
 
 		$metaplate = calderawp\metaplate\core\data::get_metaplate( $metaplate[ 'id' ] );
-		$metaplate = \calderawp\metaplate\core\data::validate_metaplate( $metaplate );
 
 		if ( isset( $metaplate[ 'content_type_specific'] ) && false == $metaplate[ 'content_type_specific'] )  {
 			$post_types = __( 'Non content type specific.', 'metaplate' );
