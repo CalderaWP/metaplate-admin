@@ -2,7 +2,7 @@
 	<div class="metaplate-main-header">
 		<h2>
 			<?php _e( 'Metaplate', 'metaplate' ); ?> <span class="metaplate-version"><?php echo MTPT_VER; ?></span>
-			<span class="add-new-h2 wp-baldrick" data-modal="new-metaplate" data-modal-height="192" data-modal-width="402" data-modal-buttons='<?php _e( 'Create Metaplate', 'metaplate' ); ?>|{"data-action":"mtpt_create_metaplate","data-before":"mtpt_create_new_metaplate", "data-callback": "bds_redirect_to_metaplate"}' data-modal-title="<?php _e('New Metaplate', 'metaplate') ; ?>" data-request="#new-metaplate-form"><?php _e('Add New', 'metaplate') ; ?></span>
+			<span class="add-new-h2 wp-baldrick" data-modal="new-metaplate" data-modal-height="220" data-modal-width="402" data-modal-buttons='<?php _e( 'Create Metaplate', 'metaplate' ); ?>|{"data-action":"mtpt_create_metaplate","data-before":"mtpt_create_new_metaplate", "data-callback": "bds_redirect_to_metaplate"}' data-modal-title="<?php _e('New Metaplate', 'metaplate') ; ?>" data-request="#new-metaplate-form"><?php _e('Add New', 'metaplate') ; ?></span>
 		</h2>
 	</div>
 
@@ -108,9 +108,8 @@
 		<input type="text" name="slug" id="new-metaplate-slug" data-format="slug" autocomplete="off" style="width: 280px;">
 	</div>
 	<div class="metaplate-config-group">
-		<label style="width: 90px;"><?php _e('Content Type Specific', 'metaplate'); ?></label>
-		<input type="checkbox" name="content_type_specific" id="content_type_specific"  autocomplete="off" checked="true">
-		<p><?php _e( 'If the content type specific option is checked, this Metaplate will be automatically for that content type. If not, it will only be able to be outputted using a PHP function or shortcode.', 'metaplate' ); ?></p>
+		<label style="width: 90px;"></label>
+		<label><input type="checkbox" name="content_type_specific" id="content_type_specific"  autocomplete="off" checked="true"> <?php _e('Autoload', 'metaplate'); ?></label>		
 	</div>
 
 </script>
