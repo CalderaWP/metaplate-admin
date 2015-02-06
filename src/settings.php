@@ -83,19 +83,16 @@ class settings extends init {
 			if( !empty( $config['search_form'] ) ){
 				$new_value['search_form'] = $config['search_form'];
 			}
-
-			$this->update_registry( $new_value, $metaplates[$config['id']] );
+			$this->update_registry( $new_value, $config['id'] );
 
 		}
 
 		if ( ! $config[ 'id'] && isset( $config[ 'slug'] ) ) {
 			$config[ 'id' ] = data::get_metaplate_id_by_slug( $config[ 'slug' ] );
 		}
-
-		$update = update_option( $config['id'], json_encode( $config ) );
+		$update = update_option( $config['id'], $config );
 		if ( $update ) {
 			wp_send_json_success( $config );
-			die();
 		}
 
 		wp_send_json_error( $config );
